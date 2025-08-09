@@ -26,10 +26,13 @@
         }
       ]
     ],
-    "ios": { "supportsTablet": true },
+    "ios": {
+      "supportsTablet": true
+    },
     "android": {
       "permissions": [],
-      "package": "com.promicity.app",
+      "package": "com.techne.promicity",
+      "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
@@ -38,6 +41,11 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "19be872e-dceb-41bf-ab78-f792978be21c"
+      }
     }
   }
 }

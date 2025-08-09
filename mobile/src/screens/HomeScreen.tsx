@@ -1,37 +1,118 @@
 /** Tela inicial com busca e apresentação do app. */
-import { View, StyleSheet } from 'react-native';
-import { useState } from 'react';
-import { Appbar, Text, Searchbar, useTheme, Card } from 'react-native-paper';
+import React, { useEffect, useState } from 'react';
+import { View, Text, ScrollView, FlatList, ActivityIndicator, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import SearchBar from '../components/SearchBar';
+import { FeaturedProviderCard } from '../components/FeaturedProviderCard';
+import { ProfessionalCard } from '../components/ProfessionalCard';
+import EventCard from '../components/EventCard';
+import { getFeaturedProfessionals, getNewestProfessionals, getUpcomingEvents } from '../services/firestore';
+
 
 export default function HomeScreen() {
-  const [query, setQuery] = useState('');
-  const theme = useTheme();
-  return (
-    <View style={styles.container}>
-      <Appbar.Header mode="center-aligned" elevated>
-        <Appbar.Content title="PromiCity" />
-      </Appbar.Header>
-      <View style={{ padding: 16, gap: 16 }}>
-        <Searchbar
-          placeholder="Buscar serviços, categorias ou nomes"
-          value={query}
-          onChangeText={setQuery}
-        />
-        <Card mode="contained" style={{ backgroundColor: theme.colors.surfaceVariant }}>
-          <Card.Content>
-            <Text variant="titleMedium">Encontre profissionais confiáveis</Text>
-            <Text variant="bodyMedium" style={{ opacity: 0.8, marginTop: 8 }}>
-              Explore a aba Profissionais, filtre por categoria e entre em contato direto via WhatsApp.
-            </Text>
-          </Card.Content>
-        </Card>
+  const [featuredProfessionals, setFeaturedProfessionals] = useState<Array<any>>([]);
+  const [newProfessionals, setNewProfessionals] = useState<Array<any>>([]);
+  const [upcomingEvents, setUpcomingEvents] = useState<Array<any>>([]);
+  const [loading, setLoading] = useState(true);
+
+  // Tipagem correta para navegação
+  // Ajuste conforme seu RootNavigator
+  // Se não usar TypeScript, pode manter sem tipagem
+  const navigation = useNavigation<any>();
+
+  useEffect(() => {
+    const loadData = async () => {
+      setLoading(true);
+      try {
+        const [featured, news, events] = await Promise.all([
+          getFeaturedProfessionals(),
+          getNewestProfessionals(),
+          getUpcomingEvents(),
+        ]);
+        setFeaturedProfessionals(featured);
+        setNewProfessionals(news);
+        setUpcomingEvents(events);
+      } catch (error) {
+        // Trate erros conforme necessário
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadData();
+  }, []);
+
+  const handleContact = (phone: string) => {
+    // Implementar ação de contato, ex: abrir WhatsApp
+    Alert.alert('Contato', `Abrir WhatsApp para ${phone}`);
+  };
+
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#007AFF" />
       </View>
-    </View>
+    );
+  }
+
+  return (
+    <ScrollView style={styles.container}>
+      <SearchBar />
+
+      {/* Em Destaque */}
+      <Text style={styles.sectionTitle}>Em Destaque</Text>
+      <FlatList
+        data={featuredProfessionals}
+        horizontal
+        keyExtractor={(item) => item.id}
+        showsHorizontalScrollIndicator={false}
+        renderItem={({ item }) => (
+          <TouchableOpacity
+            onPress={() => navigation.navigate('ProfessionalDetails', { professionalId: item.id })}
+          >
+            <FeaturedProviderCard item={item} onContact={handleContact} />
+          </TouchableOpacity>
+        )}
+        contentContainerStyle={styles.horizontalList}
+      />
+
+      {/* Próximos Eventos */}
+      <View style={styles.eventsHeader}>
+        <Text style={styles.sectionTitle}>Próximos Eventos</Text>
+        <TouchableOpacity onPress={() => navigation.navigate('EventsScreen')}>
+          <Text style={styles.seeAllButton}>Ver todos</Text>
+        </TouchableOpacity>
+      </View>
+      {upcomingEvents.map((event) => (
+        <EventCard key={event.id} event={event} />
+      ))}
+
+      {/* Novos na Cidade */}
+      <Text style={styles.sectionTitle}>Novos na Cidade</Text>
+      <FlatList
+        data={newProfessionals}
+        horizontal
+        keyExtractor={(item) => item.id}
+        showsHorizontalScrollIndicator={false}
+        renderItem={({ item }) => (
+          <TouchableOpacity
+            onPress={() => navigation.navigate('ProfessionalDetails', { professionalId: item.id })}
+          >
+            <ProfessionalCard item={item} onContact={handleContact} />
+          </TouchableOpacity>
+        )}
+        contentContainerStyle={styles.horizontalList}
+      />
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1 },
+  container: { flex: 1, backgroundColor: '#fff', paddingHorizontal: 16 },
+  loadingContainer: { flex: 1, justifyContent: 'center', alignItems: 'center' },
+  sectionTitle: { fontSize: 20, fontWeight: 'bold', marginVertical: 16 },
+  horizontalList: { paddingBottom: 16 },
+  eventsHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+  seeAllButton: { color: '#007AFF', fontWeight: 'bold' },
 });
 
 

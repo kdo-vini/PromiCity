@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "303939393464",
+    "project_id": "promicity-425bb",
+    "storage_bucket": "promicity-425bb.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:303939393464:android:35b245b8fd6e48709fe14d",
+        "android_client_info": {
+          "package_name": "com.techne.promicity"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "303939393464-gbmgt16ro1h8ef307ottgvl35sa369om.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.techne.promicity",
+            "certificate_hash": "2b0232e8e86dc9036b857b4d3d897b0484503012"
+          }
+        },
+        {
+          "client_id": "303939393464-o6l5ndblm6metnddgs8kqp89varfg5rv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCw--Tz9z_Ir62Ufh5KDlBF5NZZj_Ab-vU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "303939393464-o6l5ndblm6metnddgs8kqp89varfg5rv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
