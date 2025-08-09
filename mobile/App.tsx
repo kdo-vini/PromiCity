@@ -1,6 +1,10 @@
+// mobile/App.tsx
+
 /**
  * Componente raiz do app: provê tema, navegação e contexto de autenticação.
  */
+// As linhas de import e chamada de initializeFirebase foram REMOVIDAS daqui
+
 import { NavigationContainer, DarkTheme as NavigationDarkTheme } from '@react-navigation/native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { StatusBar } from 'expo-status-bar';

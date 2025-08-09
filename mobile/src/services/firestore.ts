@@ -1,7 +1,13 @@
+// mobile/src/services/firestore.ts
+
+// A MUDANÇA ESTÁ AQUI: importamos 'db' e 'storage' diretamente
 import { db, storage } from '@/services/firebase';
-import { collection, doc, onSnapshot, orderBy, query, setDoc, getDoc, serverTimestamp, where } from 'firebase/firestore';
-import { limit, getDocs } from 'firebase/firestore';
+
+import { collection, doc, onSnapshot, orderBy, query, setDoc, getDoc, serverTimestamp, where, limit, getDocs } from 'firebase/firestore';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
+
+// O resto do arquivo permanece exatamente como estava, sem a necessidade
+// de chamar as funções getFirestoreDb() ou getFirebaseStorage().
 
 export function listProfessionals(setter: (items: any[]) => void) {
   if (!db) {
@@ -85,7 +91,6 @@ export function listApprovedProfessionals(setter: (items: any[]) => void) {
   });
 }
 
-// Busca os profissionais destacados (máx 5)
 export async function getFeaturedProfessionals() {
   if (!db) return [];
   const q = query(
@@ -99,7 +104,6 @@ export async function getFeaturedProfessionals() {
   return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
 }
 
-// Busca os profissionais mais novos (máx 5)
 export async function getNewestProfessionals() {
   if (!db) return [];
   const q = query(
@@ -112,7 +116,6 @@ export async function getNewestProfessionals() {
   return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
 }
 
-// Busca os próximos eventos (máx 3)
 export async function getUpcomingEvents() {
   if (!db) return [];
   const now = new Date();
@@ -125,5 +128,3 @@ export async function getUpcomingEvents() {
   const snap = await getDocs(q);
   return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
 }
-
-
